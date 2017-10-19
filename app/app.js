@@ -1,13 +1,34 @@
 
 // Declare app level module which depends on views, and components
-angular.module('myApp', [])
+angular.module('myApp', ['ui.router'])
+    .config([
+        '$stateProvider',
+        '$urlRouterProvider',
+        function($stateProvider, $urlRouterProvider) {
+            $stateProvider
+                .state('home', {
+                    url: '/home',
+                    templateUrl: '/home.html',
+                    controller: 'MainCtrl'
+                })
+                .state('characters', {
+                    url: '/characters/{id}',
+                    templateUrl: '/characters.html',
+                    controller: 'CharacterCtrl'
+                });
 
-.factory('nameFactory', [function(){
-  var o = {
-    characters: []
-  };
-  return o;
-}])
+            $urlRouterProvider.otherwise('home');
+        }])
+	.factory('nameFactory', [function(){
+	  var o = {
+		characters: []
+	  };
+
+	  // o.override = function($newArray){
+	  // 	o = $newArray;
+	  // };
+	  return o;
+	}])
 
 
 .controller('MainCtrl', [
@@ -19,6 +40,10 @@ angular.module('myApp', [])
 		$scope.characters = nameFactory.characters;
 
 		$scope.nameSearch = function(){
+
+			$scope.characters.length = 0;
+            //$scope.characters = nameFactory.characters;
+
 			if($scope.formContent === '') {return;}
 			var name = $scope.formContent;
 			var ts = new Date().getTime();
@@ -35,12 +60,26 @@ angular.module('myApp', [])
 						}
 			}).then(function(response) {
 	        	console.log(response);
-	            $scope.characters = response.data.data.results;
+	            $scope.characters.push(response.data.data.results);
 	            console.log($scope.characters);
+                console.log(nameFactory.characters);
 	        }, function(error){
 	        	console.log(error);
 			});
 	        $scope.formContent = '';
 		};
 	}
-]);
+])
+
+    .controller('CharacterCtrl', [
+        '$scope',
+        '$stateParams',
+        'nameFactory',
+        function($scope, $stateParams, nameFactory){
+    		console.log($stateParams.id);
+			console.log($scope.characters);
+            $scope.character = nameFactory.characters[0][$stateParams.id];
+
+            console.log($scope.character);
+
+        }]);

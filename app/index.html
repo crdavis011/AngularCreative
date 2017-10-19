@@ -18,6 +18,7 @@
   <script src="../bower_components/angular-route/angular-route.js"></script>
   <script src="view1/view1.js"></script>
   <script src="view2/view2.js"></script>
+  <script src="//angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
@@ -29,8 +30,12 @@
   <script src="app.js"></script>
 
 </head>
-<body ng-app="myApp" ng-controller="MainCtrl">
+<body ng-app="myApp">
+<div class="row">
+    <ui-view></ui-view>
+</div>
 
+<script type="text/ng-template" id="/home.html">
   <div class="page-header">
     <h1>Marvel Hero Search</h1>
   </div>
@@ -48,9 +53,27 @@
 
   </form>
 
-  <div ng-repeat="character in characters">
+  <div ng-repeat="character in characters[0]">
+    {{character.name}}
+    <span>
+        <a href="#/characters/{{characters[0].indexOf(character)}}">{{character.name}}</a>
+      </span>
+  </div>
+</script>
+
+<script type="text/ng-template" id="/characters.html">
+  <div class="page-header">
+    <h3>
+      {{character.name}}
+    </h3>
+  </div>
+
+  <div>
     {{character.name}}
   </div>
+
+</script>
+
 
 </body>
 </html>
