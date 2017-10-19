@@ -35,7 +35,7 @@ angular.module('myApp', [])
 						}
 			}).then(function(response) {
 	        	console.log(response);
-	            $scope.characters = response.data.results;
+	            $scope.characters = response.data.data.results;
 	            console.log($scope.characters);
 	        }, function(error){
 	        	console.log(error);
