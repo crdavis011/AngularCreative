@@ -48,7 +48,6 @@ angular.module('myApp', ['ui.router'])
 			var name = $scope.formContent;
 			var ts = new Date().getTime();
   			var hash = CryptoJS.MD5(ts + '99f8280781ce7f3663b214c28b245b14986cf32d' + '91359f0be412233f86c3953f37f078ac').toString();
-			console.log(name);
 			var search = 'https://gateway.marvel.com:443/v1/public/characters';
 			$http ({
 				method: 'GET',
@@ -59,12 +58,15 @@ angular.module('myApp', ['ui.router'])
 						ts : ts
 						}
 			}).then(function(response) {
-	        	console.log(response);
 	            $scope.characters.push(response.data.data.results);
-	            console.log($scope.characters);
-                console.log(nameFactory.characters);
+	            var data_length = response.data.data.results.length;
+	            if (data_length === 0)
+				{
+					//No results found
+				}
 	        }, function(error){
 	        	console.log(error);
+	        	//No results found
 			});
 	        $scope.formContent = '';
 		};
@@ -76,10 +78,6 @@ angular.module('myApp', ['ui.router'])
         '$stateParams',
         'nameFactory',
         function($scope, $stateParams, nameFactory){
-    		console.log($stateParams.id);
-			console.log($scope.characters);
             $scope.character = nameFactory.characters[0][$stateParams.id];
-
             console.log($scope.character);
-
         }]);
